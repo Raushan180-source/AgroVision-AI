@@ -310,7 +310,7 @@ MIT License — Free to use for educational and commercial purposes.
 
 <div align="center">
 
-**Built with ❤️ for farmers, powered by AI 🌿**
+**Built with ❤️ for farmers, powered by Raushan🌿**
 
 ⭐ Star this repo if you found it helpful!
 
