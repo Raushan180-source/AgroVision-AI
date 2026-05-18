@@ -15,3 +15,12 @@ Thumbs.db
 *.log
 coverage/
 .nyc_output/
+# Exclude ML datasets
+ml-model/dataset/
+dataset/
+__pycache__/
+*.pyc
+
+# Exclude local test images
+ml-model/test.JPG
+ml-model/temp_upload.jpg
