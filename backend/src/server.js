@@ -55,6 +55,10 @@ app.use('/api/crops', require('./routes/crops'))
 app.use('/api/chat', require('./routes/chat'))
 
 // Health check
+app.get("/", (req, res) => {
+  res.send("AgroVision AI Backend Running Successfully 🚀");
+});
+
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', service: 'AgroVision AI Backend', env: process.env.NODE_ENV })
 )
