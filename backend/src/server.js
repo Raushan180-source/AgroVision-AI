@@ -22,7 +22,19 @@ const allowedOrigins = process.env.FRONTEND_URL
   : ['http://localhost:5173', 'http://localhost:3000']
 
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    // Agar request local se ho, Vercel se ho, ya phone se bina origin (mobile app/direct fetch) ke ho, toh allow kar do
+    const allowedOrigins = [
+      'https://agro-vision-ai-rho.vercel.app',
+      'http://localhost:5173'
+    ];
+    
+    if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('https://agro-vision-ai')) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS Error: Origin not allowed by AgroVision security'));
+    }
+  },
   credentials: true
 }));
 
