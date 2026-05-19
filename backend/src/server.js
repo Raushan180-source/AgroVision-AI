@@ -22,12 +22,9 @@ const allowedOrigins = process.env.FRONTEND_URL
   : ['http://localhost:5173', 'http://localhost:3000']
 
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
-    cb(new Error(`CORS: origin ${origin} not allowed`))
-  },
-  credentials: true,
-}))
+  origin: '*',
+  credentials: true
+}));
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }))
