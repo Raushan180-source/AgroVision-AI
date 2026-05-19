@@ -14,7 +14,9 @@ const app = express()
 connectDB()
 
 // Security headers
-app.use(helmet())
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 // CORS — explicit origin required when credentials: true
 const allowedOrigins = process.env.FRONTEND_URL
