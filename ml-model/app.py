@@ -125,11 +125,12 @@ DEFAULT_INFO = {
     'nutrientTips': ['Maintain balanced soil nutrition', 'Regular soil testing recommended'],
 }
 
-# ── Load Model & Indices Globally ───────────────────────────────────────────
-MODEL_PATH = "model.h5"
-LABELS_PATH = "class_indices.json"
+# ── Load Model & Indices Globally (Render-Safe Absolute Paths) ───────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
+LABELS_PATH = os.path.join(BASE_DIR, "class_indices.json")
 
-print("--> Loading Trained TensorFlow Model...")
+print(f"--> Loading Trained TensorFlow Model from: {MODEL_PATH}")
 model = tf.keras.models.load_model(MODEL_PATH)
 print("--> Model loaded successfully!")
 
@@ -194,5 +195,7 @@ def health_check():
 
 # ── Start Server ──────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("--> Starting AgroVision AI Server on port 5000...")
-    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    # Render ke environment ke hisab se PORT dynamically pick hoga, local par 5000 chalega
+    PORT = int(os.environ.get("PORT", 5000))
+    print(f"--> Starting AgroVision AI Server on port {PORT}...")
+    app.run(host="0.0.0.0", port=PORT, debug=False)
