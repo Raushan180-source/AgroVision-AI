@@ -6,6 +6,7 @@ import json
 import os
 from PIL import Image
 import io
+import requests  # <-- Auto-download ke liye requests import kiya
 
 app = Flask(__name__)
 CORS(app)  # React integration ke time CORS error se bachane ke liye
@@ -130,9 +131,31 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "model.h5")
 LABELS_PATH = os.path.join(BASE_DIR, "class_indices.json")
 
+# ── Auto-Download Model if Missing from Render Server ────────────────────────
+if not os.path.exists(MODEL_PATH):
+    print("--> model.h5 not found! Downloading from Google Drive...")
+    
+    # ⚠️ YAHAN APNI GOOGLE DRIVE KI FILE ID BILKUL DHAYAN SE CHIPKAO
+    FILE_ID = "1Q1ZOgCksI1NcHNl7pOKyLQxeqfoFoZyF" 
+    DOWNLOAD_URL = f"https://docs.google.com/uc?export=download&id={FILE_ID}"
+    
+    try:
+        response = requests.get(DOWNLOAD_URL, stream=True)
+        with open(MODEL_PATH, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+        print("--> Model downloaded successfully from Google Drive!")
+    except Exception as e:
+        print(f"--> Critical Error downloading model: {str(e)}")
+
+# ── Load Model into Memory ───────────────────────────────────────────────────
 print(f"--> Loading Trained TensorFlow Model from: {MODEL_PATH}")
-model = tf.keras.models.load_model(MODEL_PATH)
-print("--> Model loaded successfully!")
+if os.path.exists(MODEL_PATH):
+    model = tf.keras.models.load_model(MODEL_PATH)
+    print("--> Model loaded successfully!")
+else:
+    raise IOError(f"Model file could not be retrieved at {MODEL_PATH}")
 
 def load_labels_map():
     try:
@@ -195,7 +218,6 @@ def health_check():
 
 # ── Start Server ──────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    # Render ke environment ke hisab se PORT dynamically pick hoga, local par 5000 chalega
     PORT = int(os.environ.get("PORT", 5000))
     print(f"--> Starting AgroVision AI Server on port {PORT}...")
     app.run(host="0.0.0.0", port=PORT, debug=False)
