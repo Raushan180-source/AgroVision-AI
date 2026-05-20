@@ -43,7 +43,7 @@ app.use(rateLimit({
 }))
 
 // CSRF protection for all state-mutating routes
-app.use(csrfProtection)
+//app.use(csrfProtection)
 
 // Routes
 app.use('/api/auth', require('./routes/auth'))
