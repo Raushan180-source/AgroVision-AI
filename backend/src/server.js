@@ -14,30 +14,16 @@ const app = express()
 connectDB()
 
 // Security headers
-app.use(helmet({
+/*app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
+}));*/
 
-// CORS — explicit origin required when credentials: true
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
-  : ['http://localhost:5173', 'http://localhost:3000']
-
+// ── Clean & Explicit CORS Configuration ──────────────────────────────────────
 app.use(cors({
-  origin: function (origin, callback) {
-    // Agar request local se ho, Vercel se ho, ya phone se bina origin (mobile app/direct fetch) ke ho, toh allow kar do
-    const allowedOrigins = [
-      'https://agro-vision-ai-rho.vercel.app',
-      'http://localhost:5173'
-    ];
-    
-    if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('https://agro-vision-ai')) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS Error: Origin not allowed by AgroVision security'));
-    }
-  },
-  credentials: true
+  origin: 'https://agro-vision-ai-rho.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Body parsing
